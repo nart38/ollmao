@@ -10,20 +10,21 @@ import (
 )
 
 type message struct {
-	role    string
-	content string
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
 type requestBody struct {
-	model    string
-	messages []message
-	stream   bool
+	Model    string `json:"model"`
+	Messages []message `json:"messages"`
+	Stream   bool `json:"stream"`
 }
 
 func ConstructData(content string) {
 	url := "http://localhost:11434/api/chat"
 	msg := message{"user", content}
 	rb := requestBody{"phi", []message{msg}, false}
+	fmt.Println(rb)
 	finalJson, err := json.Marshal(rb)
 	if err != nil {
 		panic(err)
@@ -40,6 +41,7 @@ func ConstructData(content string) {
 		panic(err)
 	}
 
-	fmt.Println(answer)
+	fmt.Println("data: ", string(finalJson))
+	fmt.Println(string(answer))
 
 }
