@@ -12,7 +12,7 @@ go install github.com/nart38/ollama-bubble@latest
 
 * Usage
 #+BEGIN_SRC shell
-# Start ollama service at background if it is not runnig.
+# Start ollama service at background if it is not runnig already.
 systemctl start ollama
 
 # You can list installed models using ollama.
@@ -30,5 +30,5 @@ ollama-bubble starling-lm
 * Contributing
 I will try to keep scope of this app relatively narrow. I'm not planning to make
 this app extremely feature rich AI tui. I want it to be a simple app that suits
-my use case. But if you encounter a bug, have nice idea or simply want to show
+my use case. But if you encounter a bug, have a nice idea or simply want to show me
 a better way to get things done, please feel free to open an issue.
