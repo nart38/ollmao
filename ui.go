@@ -20,10 +20,7 @@ func initialModel(llm string) model {
 	ta := textarea.New()
 	ta.Placeholder = "Prompt"
 	ta.Focus()
-	// ta.Prompt = "| "
-	ta.SetWidth(160)
-	ta.SetHeight(5)
-	ta.KeyMap.InsertNewline.SetEnabled(false)
+	ta.KeyMap.InsertNewline.SetKeys("shift+enter")
 
 	rqb := requestBody{
 		Llm:      llm,
@@ -51,19 +48,28 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.Type {
-		case tea.KeyCtrlC, tea.KeyEsc:
+		switch msg.String() {
+		case "ctrl+c", "esc":
 			fmt.Println(m.textarea.Value())
 			return m, tea.Quit
-		case tea.KeyEnter:
-			chatHist := m.requestbody.ChatRequest(m.textarea.Value())
-			fmt.Println("=====")
-			fmt.Println(len(m.requestbody.Messages))
-			fmt.Println("=====")
-			m.viewport.SetContent(chatHist)
+		case "enter":
+			m.viewport.GotoBottom()
+			m.requestbody.Messages = append(
+				m.requestbody.Messages,
+				message{"user", m.textarea.Value()})
+			m.viewport.SetContent(m.requestbody.MsgHistory())
 			m.textarea.Reset()
-			// m.viewport.GotoBottom()
+			m.requestbody.Messages = append(
+				m.requestbody.Messages,
+				m.requestbody.ChatRequest())
+			m.viewport.SetContent(m.requestbody.MsgHistory())
+			m.viewport.GotoBottom()
 		}
+	case tea.WindowSizeMsg:
+		m.viewport.Height = int(float64(msg.Height) * 0.8)
+		m.viewport.Width = msg.Width - 2
+		m.textarea.SetHeight(int(float64(msg.Height) * 0.2))
+		m.textarea.SetWidth(msg.Width - 2)
 	}
 	return m, tea.Batch(vpCmd, taCmd)
 }

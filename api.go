@@ -3,7 +3,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -47,10 +46,8 @@ func ExtractAnswer(data []byte) message {
 	return answer.Message
 }
 
-func (rqb requestBody) ChatRequest(content string) string {
+func (rqb requestBody) ChatRequest() message {
 	url := "http://localhost:11434/api/chat"
-	msg := message{"user", content}
-	rqb.Messages = append(rqb.Messages, msg)
 
 	data := strings.NewReader(EncodeJson(rqb))
 	response, err := http.Post(url, "", data)
@@ -62,14 +59,13 @@ func (rqb requestBody) ChatRequest(content string) string {
 	if err != nil {
 		panic(err)
 	}
-	rqb.Messages = append(rqb.Messages, ExtractAnswer(responseBody))
-	return rqb.MsgHistory()
+	return ExtractAnswer(responseBody)
 }
 
 func (rqb requestBody) MsgHistory() string {
-	msgString := ""
+	var chatHist []string
 	for _, msg := range rqb.Messages {
-		msgString += fmt.Sprintf("%s: %s\n", msg.Role, msg.Content)
+		chatHist = append(chatHist, msg.Role+": "+msg.Content)
 	}
-	return msgString
+	return strings.Join(chatHist, "\n\n")
 }

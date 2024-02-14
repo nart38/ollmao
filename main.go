@@ -13,6 +13,6 @@ func main() {
 		os.Exit(1)
 	}
 	llm := os.Args[1]
-	p := tea.NewProgram(initialModel(llm))
+	p := tea.NewProgram(initialModel(llm), tea.WithAltScreen())
 	p.Run()
 }
