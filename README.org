@@ -1,0 +1,34 @@
+#+title: ollama-bubble
+
+Warning: App is incomplete and under heavy construction.
+
+Simple ollama tui client written in go with [[https://github.com/charmbracelet/bubbletea][Bubble Tea]]. Inspired by [[https://github.com/ggozad/oterm][oterm]].
+
+* Installation
+Install it via go install.
+#+BEGIN_SRC shell
+go install github.com/nart38/ollama-bubble@latest
+#+END_SRC
+
+* Usage
+#+BEGIN_SRC shell
+# Start ollama service at background if it is not runnig.
+systemctl start ollama
+
+# You can list installed models using ollama.
+ollama list
+
+# Start tui with ollama-bubble <modelname>. For example chat with starling-lm:
+ollama-bubble starling-lm
+#+END_SRC
+
+* Todos
+- [ ] Prettify tui with Lip Gloss
+- [ ] Implement proper interaction with viewport.
+- [ ] Implement export to JSON chat history.
+
+* Contributing
+I will try to keep scope of this app relatively narrow. I'm not planning to make
+this app extremely feature rich AI tui. I want it to be a simple app that suits
+my use case. But if you encounter a bug, have nice idea or simply want to show
+a better way to get things done, please feel free to open an issue.
