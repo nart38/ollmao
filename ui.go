@@ -6,6 +6,26 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+)
+
+// Defining lipgloss styling.
+var (
+	baseStyle lipgloss.Style = lipgloss.NewStyle().
+			BorderStyle(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("119"))
+
+	userStyle lipgloss.Style = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("118")).
+			Bold(true)
+	userMsgStyle lipgloss.Style = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("119"))
+
+	assistantStyle lipgloss.Style = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("141")).
+			Bold(true)
+	assistantMsgStyle lipgloss.Style = lipgloss.NewStyle().
+				Foreground(lipgloss.NoColor{})
 )
 
 type model struct {
@@ -18,10 +38,12 @@ func initialModel(llm string) model {
 	vp := viewport.New(160, 20)
 
 	ta := textarea.New()
-	ta.Placeholder = "Prompt"
+	ta.Placeholder = "Enter your prompt."
 	ta.CharLimit = 0
-	ta.Focus()
 	ta.KeyMap.InsertNewline.SetEnabled(false)
+	ta.ShowLineNumbers = false
+	ta.Prompt = " "
+	ta.Focus()
 
 	// Following line does not work due to: https://github.com/charmbracelet/bubbletea/issues/800
 	// ta.KeyMap.InsertNewline.SetKeys("shift+enter")
@@ -68,12 +90,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					message{"user", m.textarea.Value()})
 				m.viewport.SetContent(m.requestbody.MsgHistory())
 				m.textarea.Reset()
+				m.textarea.Placeholder = "Waiting for the model's response..."
 				err := m.requestbody.ChatRequest()
 				if err != nil {
 					panic(err)
 				}
 				m.viewport.SetContent(m.requestbody.MsgHistory())
 				m.viewport.GotoBottom()
+				m.textarea.Placeholder = "Enter your prompt."
 			}
 		case false:
 			taMsg = nil
@@ -100,9 +124,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	return fmt.Sprintf(
-		"\n%s\n%s\n",
-		m.viewport.View(),
-		m.textarea.View(),
+	return lipgloss.JoinVertical(
+		lipgloss.Left,
+		baseStyle.Render(m.viewport.View()),
+		baseStyle.Render(m.textarea.View()),
 	)
 }

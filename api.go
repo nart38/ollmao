@@ -67,8 +67,17 @@ func (rqb *requestBody) ChatRequest() (err error) {
 
 func (rqb requestBody) MsgHistory() string {
 	var chatHist []string
+	var role, content string
 	for _, msg := range rqb.Messages {
-		chatHist = append(chatHist, msg.Role+": "+msg.Content)
+		switch msg.Role {
+		case "user":
+			role = userStyle.Render("User:\n")
+			content = userMsgStyle.Render(msg.Content)
+		case "assistant":
+			role = assistantStyle.Render("AI Assistant:\n")
+			content = assistantMsgStyle.Render(msg.Content)
+		}
+		chatHist = append(chatHist, role + content)
 	}
 	return strings.Join(chatHist, "\n\n")
 }

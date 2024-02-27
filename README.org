@@ -34,7 +34,7 @@ Ctrl-C or <q>: Quit
 Most of the pager bindings you used to works thanks to Vievport Bubble.
 
 * Todos
-- [ ] Prettify tui with Lip Gloss
+- [X] Prettify tui with Lip Gloss
 - [X] Implement proper interaction with viewport.
 - [ ] Implement export to JSON chat history.
 
