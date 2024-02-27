@@ -1,4 +1,4 @@
-#+title: ollama-bubble
+#+title: ollmao
 
 Warning: App is incomplete and under heavy construction.
 
@@ -7,7 +7,7 @@ Simple ollama tui client written in go with [[https://github.com/charmbracelet/b
 * Installation
 Install it via go install.
 #+BEGIN_SRC shell
-go install github.com/nart38/ollama-bubble@latest
+go install github.com/nart38/ollmao@latest
 #+END_SRC
 
 * Usage
@@ -18,8 +18,8 @@ systemctl start ollama
 # You can list installed models using ollama.
 ollama list
 
-# Start tui with ollama-bubble <modelname>. For example chat with starling-lm:
-ollama-bubble starling-lm
+# Start tui with ollmao <modelname>. For example chat with starling-lm:
+ollmao starling-lm
 #+END_SRC
 
 ** Keybindings

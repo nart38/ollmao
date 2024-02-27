@@ -1,4 +1,4 @@
-module github.com/nart38/ollama-bubble
+module github.com/nart38/ollmao
 
 go 1.21.7
 
