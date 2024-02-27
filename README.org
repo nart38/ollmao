@@ -4,6 +4,8 @@ Warning: App is incomplete and under heavy construction.
 
 Simple ollama tui client written in go with [[https://github.com/charmbracelet/bubbletea][Bubble Tea]]. Inspired by [[https://github.com/ggozad/oterm][oterm]].
 
+[[./ollmao-demo.gif]]
+
 * Installation
 Install it via go install.
 #+BEGIN_SRC shell
