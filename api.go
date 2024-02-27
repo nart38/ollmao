@@ -46,20 +46,23 @@ func ExtractAnswer(data []byte) message {
 	return answer.Message
 }
 
-func (rqb requestBody) ChatRequest() message {
+func (rqb *requestBody) ChatRequest() (err error) {
 	url := "http://localhost:11434/api/chat"
 
-	data := strings.NewReader(EncodeJson(rqb))
+	data := strings.NewReader(EncodeJson(*rqb))
 	response, err := http.Post(url, "", data)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer response.Body.Close()
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
-		panic(err)
+		return err
 	}
-	return ExtractAnswer(responseBody)
+
+	rqb.Messages = append(rqb.Messages, ExtractAnswer(responseBody))
+
+	return nil
 }
 
 func (rqb requestBody) MsgHistory() string {

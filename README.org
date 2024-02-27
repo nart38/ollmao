@@ -22,9 +22,20 @@ ollama list
 ollama-bubble starling-lm
 #+END_SRC
 
+** Keybindings
+*** Insert Mode Bindings
+Enter: Send message
+ESC: Change mode to pager mode
+Ctrl-C: Quit
+*** Pager Mode Bindings
+i: Change mode to insert mode
+j/k: Scroll down/up
+Ctrl-C or <q>: Quit
+Most of the pager bindings you used to works thanks to Vievport Bubble.
+
 * Todos
 - [ ] Prettify tui with Lip Gloss
-- [ ] Implement proper interaction with viewport.
+- [X] Implement proper interaction with viewport.
 - [ ] Implement export to JSON chat history.
 
 * Contributing

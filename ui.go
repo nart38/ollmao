@@ -45,12 +45,17 @@ func (m model) Init() tea.Cmd {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var vpCmd tea.Cmd
+	vpMsg := msg
 	var taCmd tea.Cmd
+	taMsg := msg
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch m.textarea.Focused() {
 		case true:
+			// We are setting vpMsg to nil to prevent viewport to process keys
+			// like h, j, k, l while typing in textarea
+			vpMsg = nil
 			switch msg.String() {
 			case "esc":
 				m.textarea.Blur()
@@ -63,32 +68,34 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					message{"user", m.textarea.Value()})
 				m.viewport.SetContent(m.requestbody.MsgHistory())
 				m.textarea.Reset()
-				m.requestbody.Messages = append(
-					m.requestbody.Messages,
-					m.requestbody.ChatRequest())
+				err := m.requestbody.ChatRequest()
+				if err != nil {
+					panic(err)
+				}
 				m.viewport.SetContent(m.requestbody.MsgHistory())
 				m.viewport.GotoBottom()
 			}
 		case false:
+			taMsg = nil
 			switch msg.String() {
 			case "i":
 				m.textarea.Focus()
-			case "ctrl+c":
+			case "ctrl+c", "q":
 				fmt.Println(m.textarea.Value())
 				return m, tea.Quit
 			}
 		}
 	case tea.WindowSizeMsg:
-		m.viewport.Height = int(float64(msg.Height) * 0.8) - 2
+		m.viewport.Height = int(float64(msg.Height)*0.8) - 2
 		m.viewport.Width = msg.Width - 2
-		m.textarea.SetHeight(int(float64(msg.Height) * 0.2) - 2)
+		m.textarea.SetHeight(int(float64(msg.Height)*0.2) - 2)
 		m.textarea.SetWidth(msg.Width - 2)
 	}
 
 	// FIXME: Passing msg directly to viewport at the following line causing
 	// key strokes like h, j, k, l to also processed by viewport.
-	m.viewport, vpCmd = m.viewport.Update(msg)
-	m.textarea, taCmd = m.textarea.Update(msg)
+	m.viewport, vpCmd = m.viewport.Update(vpMsg)
+	m.textarea, taCmd = m.textarea.Update(taMsg)
 	return m, tea.Batch(vpCmd, taCmd)
 }
 
